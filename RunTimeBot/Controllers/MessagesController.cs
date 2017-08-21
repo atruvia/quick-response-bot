@@ -7,6 +7,8 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
+using Bot_Application3;
+using Microsoft.Bot.Builder.Dialogs;
 
 namespace RunTimeBot
 {
@@ -19,15 +21,18 @@ namespace RunTimeBot
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-            if (activity.Type == ActivityTypes.Message)
+            if (activity != null && activity.GetActivityType() == ActivityTypes.Message)
             {
+                activity.Locale = "de-DE";
                 ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
-                // calculate something for us to return
-                int length = (activity.Text ?? string.Empty).Length;
+
+                Activity reply = activity.CreateReply();
+                reply.Type = ActivityTypes.Typing;
+                reply.Text = null;
+                await ConversationStarter.SayToConversationAsync(reply);
 
                 // return our reply to the user
-                Activity reply = activity.CreateReply("Hi I am the runtime bot. I will bring you new fetures in the future.");
-                await connector.Conversations.ReplyToActivityAsync(reply);
+                await Conversation.SendAsync(activity, () => new RootDialog());
             }
             else
             {
