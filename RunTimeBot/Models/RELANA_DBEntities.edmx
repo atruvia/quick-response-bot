@@ -1,0 +1,352 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="QRBot_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ANSWERS">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intent_type_id" Type="int" Nullable="false" />
+          <Property Name="answer_type_id" Type="int" Nullable="false" />
+          <Property Name="text" Type="nvarchar" MaxLength="2000" />
+        </EntityType>
+        <EntityType Name="ANSWERS_TYPE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="type" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DICTIONARY">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EintragID" Type="nvarchar" MaxLength="2000" />
+          <Property Name="Benennung" Type="nvarchar" MaxLength="2000" />
+          <Property Name="Status" Type="nvarchar" MaxLength="2000" />
+          <Property Name="Definition" Type="nvarchar" MaxLength="2000" />
+          <Property Name="Sachgebiet" Type="nvarchar" MaxLength="2000" />
+        </EntityType>
+        <EntityType Name="INTENT_TYPE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="luis_id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="LUIS_TIMELINE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="luis_type_id" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" />
+        </EntityType>
+        <EntityType Name="LUIS_TYPE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="FK_ANSWERS_ANSWERS_TYPE">
+          <End Role="ANSWERS_TYPE" Type="Self.ANSWERS_TYPE" Multiplicity="1" />
+          <End Role="ANSWERS" Type="Self.ANSWERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ANSWERS_TYPE">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ANSWERS">
+              <PropertyRef Name="answer_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ANSWERS_INTENT_TYPE">
+          <End Role="INTENT_TYPE" Type="Self.INTENT_TYPE" Multiplicity="1" />
+          <End Role="ANSWERS" Type="Self.ANSWERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="INTENT_TYPE">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ANSWERS">
+              <PropertyRef Name="intent_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_INTENT_TYPE_LUIS_TYPE">
+          <End Role="LUIS_TYPE" Type="Self.LUIS_TYPE" Multiplicity="1" />
+          <End Role="INTENT_TYPE" Type="Self.INTENT_TYPE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LUIS_TYPE">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="INTENT_TYPE">
+              <PropertyRef Name="luis_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_LUIS_TYPE">
+          <End Role="LUIS_TYPE" Type="Self.LUIS_TYPE" Multiplicity="1" />
+          <End Role="LUIS_TIMELINE" Type="Self.LUIS_TIMELINE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LUIS_TYPE">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LUIS_TIMELINE">
+              <PropertyRef Name="luis_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="QRBot_DBModelStoreContainer">
+          <EntitySet Name="ANSWERS" EntityType="Self.ANSWERS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ANSWERS_TYPE" EntityType="Self.ANSWERS_TYPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DICTIONARY" EntityType="Self.DICTIONARY" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="INTENT_TYPE" EntityType="Self.INTENT_TYPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LUIS_TIMELINE" EntityType="Self.LUIS_TIMELINE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LUIS_TYPE" EntityType="Self.LUIS_TYPE" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ANSWERS_ANSWERS_TYPE" Association="Self.FK_ANSWERS_ANSWERS_TYPE">
+            <End Role="ANSWERS_TYPE" EntitySet="ANSWERS_TYPE" />
+            <End Role="ANSWERS" EntitySet="ANSWERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ANSWERS_INTENT_TYPE" Association="Self.FK_ANSWERS_INTENT_TYPE">
+            <End Role="INTENT_TYPE" EntitySet="INTENT_TYPE" />
+            <End Role="ANSWERS" EntitySet="ANSWERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_INTENT_TYPE_LUIS_TYPE" Association="Self.FK_INTENT_TYPE_LUIS_TYPE">
+            <End Role="LUIS_TYPE" EntitySet="LUIS_TYPE" />
+            <End Role="INTENT_TYPE" EntitySet="INTENT_TYPE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_LUIS_TYPE" Association="Self.FK_Table_LUIS_TYPE">
+            <End Role="LUIS_TYPE" EntitySet="LUIS_TYPE" />
+            <End Role="LUIS_TIMELINE" EntitySet="LUIS_TIMELINE" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="QRBot_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ANSWERS">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intent_type_id" Type="Int32" Nullable="false" />
+          <Property Name="answer_type_id" Type="Int32" Nullable="false" />
+          <Property Name="text" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ANSWERS_TYPE" Relationship="Self.FK_ANSWERS_ANSWERS_TYPE" FromRole="ANSWERS" ToRole="ANSWERS_TYPE" />
+          <NavigationProperty Name="INTENT_TYPE" Relationship="Self.FK_ANSWERS_INTENT_TYPE" FromRole="ANSWERS" ToRole="INTENT_TYPE" />
+        </EntityType>
+        <EntityType Name="ANSWERS_TYPE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="ANSWERS" Relationship="Self.FK_ANSWERS_ANSWERS_TYPE" FromRole="ANSWERS_TYPE" ToRole="ANSWERS" />
+        </EntityType>
+        <EntityType Name="DICTIONARY">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EintragID" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="Benennung" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="Definition" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="Sachgebiet" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="INTENT_TYPE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="luis_id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ANSWERS" Relationship="Self.FK_ANSWERS_INTENT_TYPE" FromRole="INTENT_TYPE" ToRole="ANSWERS" />
+          <NavigationProperty Name="LUIS_TYPE" Relationship="Self.FK_INTENT_TYPE_LUIS_TYPE" FromRole="INTENT_TYPE" ToRole="LUIS_TYPE" />
+        </EntityType>
+        <EntityType Name="LUIS_TYPE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="INTENT_TYPE" Relationship="Self.FK_INTENT_TYPE_LUIS_TYPE" FromRole="LUIS_TYPE" ToRole="INTENT_TYPE" />
+          <NavigationProperty Name="LUIS_TIMELINE" Relationship="QRBot_DBModel.FK_Table_LUIS_TYPE" FromRole="LUIS_TYPE" ToRole="LUIS_TIMELINE" />
+        </EntityType>
+        <Association Name="FK_ANSWERS_ANSWERS_TYPE">
+          <End Role="ANSWERS_TYPE" Type="Self.ANSWERS_TYPE" Multiplicity="1" />
+          <End Role="ANSWERS" Type="Self.ANSWERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ANSWERS_TYPE">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ANSWERS">
+              <PropertyRef Name="answer_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ANSWERS_INTENT_TYPE">
+          <End Role="INTENT_TYPE" Type="Self.INTENT_TYPE" Multiplicity="1" />
+          <End Role="ANSWERS" Type="Self.ANSWERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="INTENT_TYPE">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ANSWERS">
+              <PropertyRef Name="intent_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_INTENT_TYPE_LUIS_TYPE">
+          <End Role="LUIS_TYPE" Type="Self.LUIS_TYPE" Multiplicity="1" />
+          <End Role="INTENT_TYPE" Type="Self.INTENT_TYPE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LUIS_TYPE">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="INTENT_TYPE">
+              <PropertyRef Name="luis_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="QRBot_DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ANSWERS" EntityType="Self.ANSWERS" />
+          <EntitySet Name="ANSWERS_TYPE" EntityType="Self.ANSWERS_TYPE" />
+          <EntitySet Name="DICTIONARY" EntityType="Self.DICTIONARY" />
+          <EntitySet Name="INTENT_TYPE" EntityType="Self.INTENT_TYPE" />
+          <EntitySet Name="LUIS_TYPE" EntityType="Self.LUIS_TYPE" />
+          <AssociationSet Name="FK_ANSWERS_ANSWERS_TYPE" Association="Self.FK_ANSWERS_ANSWERS_TYPE">
+            <End Role="ANSWERS_TYPE" EntitySet="ANSWERS_TYPE" />
+            <End Role="ANSWERS" EntitySet="ANSWERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ANSWERS_INTENT_TYPE" Association="Self.FK_ANSWERS_INTENT_TYPE">
+            <End Role="INTENT_TYPE" EntitySet="INTENT_TYPE" />
+            <End Role="ANSWERS" EntitySet="ANSWERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_INTENT_TYPE_LUIS_TYPE" Association="Self.FK_INTENT_TYPE_LUIS_TYPE">
+            <End Role="LUIS_TYPE" EntitySet="LUIS_TYPE" />
+            <End Role="INTENT_TYPE" EntitySet="INTENT_TYPE" />
+          </AssociationSet>
+          <EntitySet Name="LUIS_TIMELINE" EntityType="QRBot_DBModel.LUIS_TIMELINE" />
+          <AssociationSet Name="FK_Table_LUIS_TYPE" Association="QRBot_DBModel.FK_Table_LUIS_TYPE">
+            <End Role="LUIS_TYPE" EntitySet="LUIS_TYPE" />
+            <End Role="LUIS_TIMELINE" EntitySet="LUIS_TIMELINE" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="LUIS_TIMELINE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="luis_type_id" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="LUIS_TYPE" Relationship="QRBot_DBModel.FK_Table_LUIS_TYPE" FromRole="LUIS_TIMELINE" ToRole="LUIS_TYPE" />
+        </EntityType>
+        <Association Name="FK_Table_LUIS_TYPE">
+          <End Type="QRBot_DBModel.LUIS_TYPE" Role="LUIS_TYPE" Multiplicity="1" />
+          <End Type="QRBot_DBModel.LUIS_TIMELINE" Role="LUIS_TIMELINE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LUIS_TYPE">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LUIS_TIMELINE">
+              <PropertyRef Name="luis_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="QRBot_DBModelStoreContainer" CdmEntityContainer="QRBot_DBEntities">
+          <EntitySetMapping Name="ANSWERS">
+            <EntityTypeMapping TypeName="QRBot_DBModel.ANSWERS">
+              <MappingFragment StoreEntitySet="ANSWERS">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="intent_type_id" ColumnName="intent_type_id" />
+                <ScalarProperty Name="answer_type_id" ColumnName="answer_type_id" />
+                <ScalarProperty Name="text" ColumnName="text" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ANSWERS_TYPE">
+            <EntityTypeMapping TypeName="QRBot_DBModel.ANSWERS_TYPE">
+              <MappingFragment StoreEntitySet="ANSWERS_TYPE">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DICTIONARY">
+            <EntityTypeMapping TypeName="QRBot_DBModel.DICTIONARY">
+              <MappingFragment StoreEntitySet="DICTIONARY">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="EintragID" ColumnName="EintragID" />
+                <ScalarProperty Name="Benennung" ColumnName="Benennung" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Definition" ColumnName="Definition" />
+                <ScalarProperty Name="Sachgebiet" ColumnName="Sachgebiet" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="INTENT_TYPE">
+            <EntityTypeMapping TypeName="QRBot_DBModel.INTENT_TYPE">
+              <MappingFragment StoreEntitySet="INTENT_TYPE">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="luis_id" ColumnName="luis_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LUIS_TYPE">
+            <EntityTypeMapping TypeName="QRBot_DBModel.LUIS_TYPE">
+              <MappingFragment StoreEntitySet="LUIS_TYPE">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LUIS_TIMELINE">
+            <EntityTypeMapping TypeName="QRBot_DBModel.LUIS_TIMELINE">
+              <MappingFragment StoreEntitySet="LUIS_TIMELINE">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="luis_type_id" ColumnName="luis_type_id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

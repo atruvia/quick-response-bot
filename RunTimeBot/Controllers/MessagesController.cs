@@ -9,6 +9,8 @@ using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
 using Bot_Application3;
 using Microsoft.Bot.Builder.Dialogs;
+using RunTimeBot.Dialogs;
+using RunTimeBot.RootDialogs;
 
 namespace RunTimeBot
 {
@@ -19,8 +21,14 @@ namespace RunTimeBot
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
         /// </summary>
+        /// 
+
+        
+
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
+            ConversationStarter.sendingInformation(activity.AsMessageActivity());
+
             if (activity != null && activity.GetActivityType() == ActivityTypes.Message)
             {
                 activity.Locale = "de-DE";
@@ -30,9 +38,20 @@ namespace RunTimeBot
                 reply.Type = ActivityTypes.Typing;
                 reply.Text = null;
                 await ConversationStarter.SayToConversationAsync(reply);
-
+                string luisSelection = Utils.Utils.getLastLuisTimeLine().luisType.Name;
                 // return our reply to the user
-                await Conversation.SendAsync(activity, () => new RootDialog());
+                switch (luisSelection.ToLower())
+                {
+                    case "ewi":
+                        await Conversation.SendAsync(activity, () => new RootDialogEWI());
+                        break;
+                    case "host":
+                        await Conversation.SendAsync(activity, () => new RootDialogHost());
+                        break;
+                    case "runtime":
+                        await Conversation.SendAsync(activity, () => new RootDialogRuntime());
+                        break;
+                }
             }
             else
             {
