@@ -46,7 +46,7 @@ namespace Bot_Application3
 
         public static void sendingInformation(IMessageActivity message)
         {
-            //We need to keep this data so we know who to send the message to. Assume this would be stored somewhere, e.g. an Azure Table
+            
             if (string.IsNullOrEmpty(toId) && string.IsNullOrEmpty(toName) &&
                 string.IsNullOrEmpty(fromId) && string.IsNullOrEmpty(fromName) &&
                 string.IsNullOrEmpty(serviceUrl) && string.IsNullOrEmpty(channelId) &&

@@ -9,20 +9,14 @@ namespace RunTimeBot.Utils
     // [Serializable]
     public class Utils
     {
-        //SELECT * FROM INTENT_TYPE AS IT, ANSWERS AS A WHERE IT.Id = A.intent_type_id AND IT.Name = 'RT_JENS'
-        /*public static List<Models.ANSWERS> getAnswers(string intentName)
-        {
-            Models.QRBot_DBEntities DB = new Models.QRBot_DBEntities();
 
-            List<Models.ANSWERS> listOfMatches = (from intentType in DB.INTENT_TYPE
-                                                  join answers in DB.ANSWERS on intentType.Id equals answers.intent_type_id
-                                                  where intentType.name == intentName
-                                                  select answers
-                                                 ).ToList();
-            return listOfMatches;
-
-        }*/
-
+        // Summary:
+        //     Get the last LuisTime line defined by date on the Luis_timeline table.
+        //
+        // Returns:
+        //     The last DataModels.LuisTypeAndTimeline object defined on the database.
+        //
+       
         public static DataModels.LuisTypeAndTimeline getLastLuisTimeLine()
         {
             Models.QRBot_DBEntities DB = new Models.QRBot_DBEntities();
@@ -37,11 +31,27 @@ namespace RunTimeBot.Utils
             return listOfMatches;
         }
 
-        //Get answers depending on luisname, and intent name
+
+        // Summary:
+        //     Get a List of answers from the database that match with the luisName and intentName given.
+        //
+        // Parameters:
+        //   luisName:
+        //     the Luis Name to look for answers
+        //
+        //   intentName:
+        //     the specific intent name the look for answers.
+        //
+        // Returns:
+        //     a System.Collections.Generic.List<DataModels.AnswerRelation> with the answers.
+        //
+
         public static List<DataModels.AnswerRelation> getAnswers(string luisName, string intentName)
         {
             Models.QRBot_DBEntities DB = new Models.QRBot_DBEntities();
 
+
+            
             List<DataModels.AnswerRelation> listOfMatches = (from luis_type in DB.LUIS_TYPE
                                                              join intentType in DB.INTENT_TYPE on luis_type.Id equals intentType.luis_id
                                                              join answer in DB.ANSWERS on intentType.Id equals answer.intent_type_id
@@ -56,7 +66,22 @@ namespace RunTimeBot.Utils
             return listOfMatches;
         }
 
-        //Get answers depending on luisname, intentname and asnwertype
+        // Summary:
+        //     Get a List of answers from the database that match with the luisName, intentName and answertype given.
+        //
+        // Parameters:
+        //   luisName:
+        //     the Luis Name to look for answers
+        //
+        //   intentName:
+        //     the specific intent name the look for answers.
+        //    
+        //   answertype:
+        //     descriminate the answers by answertype.
+        //
+        // Returns:
+        //     a System.Collections.Generic.List<DataModels.AnswerRelation> with the answers.
+        //
         public static List<DataModels.FullAnswerRelation> getAnswers(string luisName, string intentName, string answertype)
         {
             Models.QRBot_DBEntities DB = new Models.QRBot_DBEntities();
@@ -75,6 +100,21 @@ namespace RunTimeBot.Utils
                                                                  }).ToList();
             return listOfMatches;
         }
+
+        // Summary:
+        //     Gets a random position from a List of answers, fetching the rows that match with
+        //     the luisName and intentName given
+        //
+        // Parameters:
+        //   luisName:
+        //     the Luis Name to look for answers
+        //
+        //   intentName:
+        //     the specific intent name the look for answers.
+        //
+        // Returns:
+        //     the DataModels.AnswerRelation randomly choosed.
+        //
 
         public static DataModels.AnswerRelation getRandomAnswer(string luisName, string intentName)
         {

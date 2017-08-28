@@ -23,7 +23,6 @@ namespace RunTimeBot
         /// </summary>
         /// 
 
-        
 
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
@@ -31,15 +30,18 @@ namespace RunTimeBot
 
             if (activity != null && activity.GetActivityType() == ActivityTypes.Message)
             {
-                activity.Locale = "de-DE";
+
+                activity.Locale = "de-DE";//Selecting the language of the reply.
                 ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
+                //Starting reply, shows that the Bot is typing.
                 Activity reply = activity.CreateReply();
-                reply.Type = ActivityTypes.Typing;
+                reply.Type = ActivityTypes.Typing;//
                 reply.Text = null;
-                await ConversationStarter.SayToConversationAsync(reply);
-                string luisSelection = Utils.Utils.getLastLuisTimeLine().luisType.Name;
-                // return our reply to the user
+                await ConversationStarter.SayToConversationAsync(reply);// Sending reply to user
+                string luisSelection = Utils.Utils.getLastLuisTimeLine().luisType.Name; //Get the the luis activated from data base.
+                
+                // Selecting from diferent LUIS
                 switch (luisSelection.ToLower())
                 {
                     case "ewi":
